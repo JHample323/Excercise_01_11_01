@@ -12,6 +12,21 @@
 // global variables
 var selectedCity = "Tucson, AZ";
 var weatherReport = null;
+// var to hold our XHR object
+var httpRequest = false;
+
+// function to get a request object
+function getRequestObject() {
+    // instantiate an XHR object
+    try {
+        httpRequest = new XMLHttpRequest();
+    } catch (errorMessage) {
+        document.querySelector("p.error").innerHTML = "Forecast not supported by your browser.";
+        document.querySelector("p.error").style.display = "block";
+        return false;
+    }
+    return httpRequest;
+}
 
 // get the weather on click events to city locations
 // and for default city on page load
@@ -35,6 +50,15 @@ function getWeather(evt) {
         latitude = 45.5601062;
         longitude = -73.7120832;
     }
+    // test for XHR object
+    if (!httpRequest) {
+        httpRequest = getRequestObject();
+    }
+    // protect against open request
+    httpRequest.abort();
+    // target request
+    httpRequest.open("get", "solar.php?" + "lat=" + latitude + "&lng=" + longitude, true);
+    httpRequest.send(null);
 }
 
 // retrieve li elements holding city location choices
