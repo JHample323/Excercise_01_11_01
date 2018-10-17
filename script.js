@@ -11,38 +11,8 @@
 
 // global variables
 var selectedCity = "Tucson, AZ";
-var weatherReport = null; // holds our response data
+var weatherReport; // holds our response data
 // var to hold our XHR object
-var httpRequest = false; // have an XHR object?
-
-// function to get a request object
-function getRequestObject() {
-    // instantiate an XHR object
-    try {
-        httpRequest = new XMLHttpRequest();
-    } catch (errorMessage) {
-        document.querySelector("p.error").innerHTML = "Forecast not supported by your browser.";
-        document.querySelector("p.error").style.display = "block";
-        return false;
-    }
-    return httpRequest;
-}
-
-// function us an event handler for onreadystatechange
-// get the weather data if successful
-function fillWeather() {
-    // check the readyState for 4 - done
-    if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-        weatherReport = JSON.parse(httpRequest.responseText);
-        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        var dateValue = new Date(weatherReport.daily.data[0].time);
-        var dayOfWeek = dateValue.getDay();
-        var rows = document.querySelectorAll("section.week table tbody tr");
-        document.querySelector("section.week table caption").innerHTML = selectedCity;
-        document.querySelector("section.week table caption").style.display = "block";
-        document.querySelector("section.week table").style.display = "inline-block";
-    }
-}
 
 // get the weather on click events to city locations
 // and for default city on page load
@@ -66,23 +36,12 @@ function getWeather(evt) {
         latitude = 45.5601062;
         longitude = -73.7120832;
     }
-    // test for XHR object
-    if (!httpRequest) {
-        httpRequest = getRequestObject();
-    }
-    // protect against open request
-    httpRequest.abort();
-    // target request
-    httpRequest.open("get", "solar.php?" + "lat=" + latitude + "&lng=" + longitude, true);
-    httpRequest.send(null);
-    // event listener for onreadystatechange
-    httpRequest.onreadystatechange = fillWeather;
 }
 
 // retrieve li elements holding city location choices
 var locations = document.querySelectorAll("section ul li");
 // add click event listeners to all city location elements
-// event handler will be getWeather()
+// event handler will be getWeather
 for (var i = 0; i < locations.length; i++) {
     if (locations[i].addEventListener) {
         locations[i].addEventListener("click", getWeather, false);
@@ -90,7 +49,6 @@ for (var i = 0; i < locations.length; i++) {
         locations[i].attachEvent("onclick", getWeather);
     }
 }
-
 // add load event listeners to get weather for default location
 // default event handler is get weather
 if (window.addEventListener) {

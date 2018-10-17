@@ -1,5 +1,5 @@
 <?php
-$WeatherSource = "https://api.forecast.io/forecast/7057209bc69737e56b9afd3eb9270519/" . $_GET["lat"] . "," . $_GET["lng"];
+$WeatherSource = "https://api.forecast.io/forecast/d2c9f07acecef8ad3f86fec4404ee362/" . $_GET["lat"] . "," . $_GET["lng"];
 header("Content-Type: application/json");
 header("Cache-Control: no-cache");
 readfile($WeatherSource);
